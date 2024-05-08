@@ -36,14 +36,16 @@ class PredictionView(APIView):
             image_path = self.save_file(file)
             
             # Predict
-            resnet50_pred, swin_pred = predict_image(image_path)
+            resnet50_pred, swin_pred, effNetB6_pred, ensemble_preds= predict_image(image_path)
             if os.path.exists(image_path):
                 os.remove(image_path)
             return Response(
                 {"success": True,
                 "data":{
                     'resnet50_prediction': resnet50_pred,
-                    'swin_transformer_prediction': swin_pred
+                    'swin_transformer_prediction': swin_pred,
+                    'effNetB6_prediction':effNetB6_pred,
+                    'ensemble_prediction':ensemble_preds = torch.stack((resnet50_pred, swin_pred, effNetB6_pred), dim=1)
                 }},
                 status=status.HTTP_200_OK
             )
