@@ -68,7 +68,37 @@ def load_swin_transformer_model():
     model.load_state_dict(model_state)
 
     return model
+def load_EffNetB6_model():
+    # Download model from gdrive if not present
+    effnetb6_model_path = os.path.join(settings.MODELS_PATH, 'EffBetB6_0504.pth')
+    if not os.path.exists(effnetb6_model_path):
+        print("-"*30)
+        print("Downloading EfficientNet-B6 Model from gdrive.")
+        effnetb6_file_id = '1abcdefghi_jklmnopqrstuvwxyz'
+        download_file_from_google_drive(effnetb6_file_id, effnetb6_model_path)
+    else:
+        pass
 
+    # Load pre-trained EfficientNet-B6 model
+    EffNetB6 = models.efficientnet_b6(pretrained=True)
+
+    # Freeze the pre-trained weights
+    for param in EffNetB6.parameters():
+        param.requires_grad = False
+
+    # Modify the classifier part of the model
+    num_features_in = EffNetB6.classifier[1].in_features  # Get number of input features to the last layer
+    EffNetB6.classifier[1] = torch.nn.Sequential(
+        torch.nn.Linear(num_features_in, 1),  # Replace last layer with a linear layer for 1 output (binary classification)
+        torch.nn.Sigmoid()  # Add a Sigmoid activation function
+    )
+
+    # Load the saved model state
+    model_state = torch.load(effnetb6_model_path, map_location=torch.device('cpu'))
+    EffNetB6.load_state_dict(model_state)
+
+    return EffNetB6
+    
 def download_file_from_google_drive(file_id, output_path):
     """
     Download a file from Google Drive.
