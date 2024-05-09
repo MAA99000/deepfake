@@ -69,32 +69,32 @@ def load_swin_transformer_model():
 
     return model
     
-def load_EffNetB6_model():
+#def load_EffNetB6_model():
     # Define the path for the model
-    effnetb6_model_path = os.path.join(settings.MODELS_PATH, 'EffBetB6_0504.pth')
+   # effnetb6_model_path = os.path.join(settings.MODELS_PATH, 'EffBetB6_0504.pth')
     
     # Check if model is not present, then download it
-    if not os.path.exists(effnetb6_model_path):
-        print("-" * 30)
-        print("Downloading EffNetB6 Model from gdrive.")
-        effnetb6_file_id = '1eRIjk0bii3s2xRXnf1iy9O8W1PvGDenD'  # Replace with your actual file ID
-        download_file_from_google_drive(effnetb6_file_id, effnetb6_model_path)
+    #if not os.path.exists(effnetb6_model_path):
+        #print("-" * 30)
+        #print("Downloading EffNetB6 Model from gdrive.")
+        #effnetb6_file_id = '1eRIjk0bii3s2xRXnf1iy9O8W1PvGDenD'  # Replace with your actual file ID
+        #download_file_from_google_drive(effnetb6_file_id, effnetb6_model_path)
     
     # Load EfficientNet B6 without pre-trained weights
-    model = timm.create_model('efficientnet_b6', pretrained=False, num_classes=1)
+    #model = timm.create_model('efficientnet_b6', pretrained=False, num_classes=1)
 
     # Freeze all model parameters (uniform approach like other models)
-    for param in model.parameters():
-        param.requires_grad = False
+    #for param in model.parameters():
+        #param.requires_grad = False
         
-    for param in model.head.parameters():
-        param.requires_grad = True
+    #for param in model.head.parameters():
+        #param.requires_grad = True
 
     # Load the saved model state
-    model_state = torch.load(effnetb6_model_path, map_location=torch.device('cpu'))
-    model.load_state_dict(model_state)
+    #model_state = torch.load(effnetb6_model_path, map_location=torch.device('cpu'))
+    #model.load_state_dict(model_state)
 
-    return EffNetB6
+    #return EffNetB6
 
 
 
