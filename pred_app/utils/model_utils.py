@@ -94,7 +94,7 @@ def load_EffNetB6_model():
     model_state = torch.load(effnetb6_model_path, map_location=torch.device('cpu'))
     model.load_state_dict(model_state)
 
-    return model
+    return EffNetB6
 
 
 
