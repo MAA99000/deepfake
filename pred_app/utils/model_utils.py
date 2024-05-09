@@ -96,9 +96,6 @@ def load_swin_transformer_model():
 
     #return EffNetB6
 
-
-
-    return model 
     
 def download_file_from_google_drive(file_id, output_path):
     """
