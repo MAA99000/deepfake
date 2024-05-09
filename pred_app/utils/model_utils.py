@@ -87,7 +87,7 @@ def load_EffNetB6_model():
     for param in model.parameters():
         param.requires_grad = False
         
-     for param in model.head.parameters():
+    for param in model.head.parameters():
         param.requires_grad = True
 
     # Load the saved model state
