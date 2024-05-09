@@ -77,7 +77,7 @@ def load_EffNetB6_model():
     if not os.path.exists(effnetb6_model_path):
         print("-" * 30)
         print("Downloading EffNetB6 Model from gdrive.")
-        effnetb6_file_id = '1w22ma7XPwW3AWNWINyYZY0WCtyJtJARU'  # Replace with your actual file ID
+        effnetb6_file_id = '1eRIjk0bii3s2xRXnf1iy9O8W1PvGDenD'  # Replace with your actual file ID
         download_file_from_google_drive(effnetb6_file_id, effnetb6_model_path)
     
     # Load EfficientNet B6 without pre-trained weights
