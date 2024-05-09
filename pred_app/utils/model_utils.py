@@ -70,26 +70,33 @@ def load_swin_transformer_model():
     return model
     
 def load_EffNetB6_model():
-    # 1. Load pre-trained InceptionV3 model
-    # model = models.inception_v3(pretrained=True, aux_logits=True)
-    EffNetB6 = models.efficientnet_b6(pretrained=True)
+    # Define the path for the model
+    effnetb6_model_path = os.path.join(settings.MODELS_PATH, 'EffBetB6_0504.pth')
+    
+    # Check if model is not present, then download it
+    if not os.path.exists(effnetb6_model_path):
+        print("-" * 30)
+        print("Downloading EffNetB6 Model from gdrive.")
+        effnetb6_file_id = '1w22ma7XPwW3AWNWINyYZY0WCtyJtJARU'  # Replace with your actual file ID
+        download_file_from_google_drive(effnetb6_file_id, effnetb6_model_path)
+    
+    # Load EfficientNet B6 without pre-trained weights
+    model = timm.create_model('efficientnet_b6', pretrained=False, num_classes=1)
 
-
-    # 2. Freeze the pre-trained weights
-    for param in EffNetB6.parameters():
+    # Freeze all model parameters (uniform approach like other models)
+    for param in model.parameters():
         param.requires_grad = False
+    
+    # Load the saved model state
+    model_state = torch.load(effnetb6_model_path, map_location=torch.device('cpu'))
+    model.load_state_dict(model_state)
+   # Move the model to the appropriate device
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    model.to(device)
 
-    # 3. Modify the classifier part of the model
-    num_features_in = EffNetB6.classifier[1].in_features  # Get number of input features to the last layer
-    EffNetB6.classifier[1] = torch.nn.Sequential(
-    torch.nn.Linear(num_features_in, 1),  # Replace last layer with a linear layer for 1 output (binary classification)
-    torch.nn.Sigmoid()  # Add a Sigmoid activation function
-    )
+    return model
 
 
-    # 2. Load the saved model state
-    model_state = torch.load(os.path.join(os.getcwd(), 'EffBetB6_0504.pth'))
-    EffNetB6.load_state_dict(model_state)
 
     return model 
     
