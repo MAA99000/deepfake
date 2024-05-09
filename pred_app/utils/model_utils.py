@@ -86,13 +86,13 @@ def load_EffNetB6_model():
     # Freeze all model parameters (uniform approach like other models)
     for param in model.parameters():
         param.requires_grad = False
-    
+        
+     for param in model.head.parameters():
+        param.requires_grad = True
+
     # Load the saved model state
     model_state = torch.load(effnetb6_model_path, map_location=torch.device('cpu'))
     model.load_state_dict(model_state)
-   # Move the model to the appropriate device
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    model.to(device)
 
     return model
 
